@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUIZO - CBSE Quiz</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+  margin:0;
+  background:linear-gradient(135deg,#1d2671,#c33764);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+}
+
+.container{
+  width:100%;
+  max-width:450px;
+  background:#111;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 0 15px rgba(0,0,0,0.6);
+}
+
+h1,h2{
+  text-align:center;
+}
+
+input,button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+}
+
+button{
+  background:#ff9800;
+  color:#000;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+button:hover{
+  background:#ffc107;
+}
+
+.hidden{
+  display:none;
+}
+
+.level-btn{
+  margin:6px 0;
+}
+
+.locked{
+  background:#555;
+  color:#ccc;
+  cursor:not-allowed;
+}
+
+.option{
+  background:#222;
+  color:#fff;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.option:hover{
+  background:#333;
+}
+
+.score{
+  text-align:center;
+  font-size:18px;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LOGIN -->
+  <div id="login">
+    <h1>QUIZO Login</h1>
+    <input type="password" id="password" placeholder="Enter Password">
+    <button onclick="login()">Login</button>
+    <p id="loginError" style="color:red;text-align:center;"></p>
+  </div>
+
+  <!-- WELCOME -->
+  <div id="welcome" class="hidden">
+    <h1>Welcome to QUIZO 🎉</h1>
+    <button onclick="showLevels()">Start Quiz</button>
+  </div>
+
+  <!-- LEVELS -->
+  <div id="levels" class="hidden">
+    <h2>Select Level</h2>
+    <div id="levelButtons"></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz" class="hidden">
+    <h2 id="levelTitle"></h2>
+    <p id="question"></p>
+    <div id="options"></div>
+    <button onclick="nextQuestion()">Next</button>
+    <div class="score" id="progress"></div>
+  </div>
+
+</div>
+
+<script>
+const PASSWORD = "999";
+let currentLevel = 0;
+let currentQuestion = 0;
+let score = 0;
+
+let unlockedLevel = localStorage.getItem("unlockedLevel")
+  ? parseInt(localStorage.getItem("unlockedLevel"))
+  : 1;
+
+const questions = [
+  // LEVEL 1 (Easy)
+  [
+const Q = [
+
+/* ================= LEVEL 1 (EASY) ================= */
+[
+{q:"SI unit of electric current?",o:["Volt","Ampere","Ohm","Watt"],a:1},
+{q:"Value of π?",o:["3.14","2.17","1.73","4.1"],a:0},
+{q:"Capital of India?",o:["Delhi","Mumbai","Chennai","Kolkata"],a:0},
+{q:"pH of pure water?",o:["6","7","8","5"],a:1},
+{q:"Speed formula?",o:["d/t","t/d","m×v","f×a"],a:0},
+{q:"Chemical symbol of Sodium?",o:["So","Na","S","Sn"],a:1},
+{q:"Largest planet?",o:["Earth","Mars","Jupiter","Saturn"],a:2},
+{q:"1 km equals?",o:["100 m","1000 m","10,000 m","10 m"],a:1},
+{q:"Who wrote Indian Constitution?",o:["Ambedkar","Nehru","Gandhi","Patel"],a:0},
+{q:"Sun rises in?",o:["West","East","North","South"],a:1}
+],
+
+/* ================= LEVEL 2 ================= */
+[
+{q:"Which gas supports combustion?",o:["O₂","CO₂","N₂","H₂"],a:0},
+{q:"Find value of 2² + 3²",o:["13","10","7","9"],a:0},
+{q:"Prime Meridian passes through?",o:["India","UK","USA","Russia"],a:1},
+{q:"Unit of work?",o:["Newton","Joule","Watt","Pascal"],a:1},
+{q:"Chemical name of baking soda?",o:["Na₂CO₃","NaHCO₃","NaCl","CaCO₃"],a:1},
+{q:"Density formula?",o:["m/v","v/m","m×v","v+m"],a:0},
+{q:"Main source of energy for Earth?",o:["Coal","Wind","Sun","Water"],a:2},
+{q:"Which metal is liquid at room temp?",o:["Iron","Mercury","Copper","Aluminium"],a:1},
+{q:"Who started Non-Cooperation Movement?",o:["Tilak","Gandhi","Bose","Nehru"],a:1},
+{q:"SI unit of pressure?",o:["Bar","Pascal","Newton","Joule"],a:1}
+],
+
+/* ================= LEVEL 3 ================= */
+[
+{q:"Slope of distance-time graph gives?",o:["Speed","Acceleration","Distance","Time"],a:0},
+{q:"Acid in vinegar?",o:["Citric","Acetic","Sulphuric","Nitric"],a:1},
+{q:"Roots of x² − 9 = 0?",o:["±3","±9","3","0"],a:0},
+{q:"Largest tea producer?",o:["India","China","Sri Lanka","Kenya"],a:1},
+{q:"Hormone controlling growth?",o:["Insulin","Thyroxine","GH","Adrenaline"],a:2},
+{q:"Unit of resistance?",o:["Volt","Ohm","Ampere","Watt"],a:1},
+{q:"Power formula?",o:["V×I","I/R","R×I","V/R"],a:0},
+{q:"Ozone layer absorbs?",o:["IR","UV","X-ray","Gamma"],a:1},
+{q:"sin 30° value?",o:["1","0.5","√3/2","0"],a:1},
+{q:"Metal used for galvanization?",o:["Iron","Zinc","Copper","Silver"],a:1}
+],
+
+/* ================= LEVEL 4 ================= */
+[
+{q:"Momentum formula?",o:["m+v","m×v","m/v","v/m"],a:1},
+{q:"Find HCF of 18 & 24",o:["6","12","18","24"],a:1},
+{q:"Coal formation process?",o:["Carbonization","Weathering","Erosion","Fusion"],a:0},
+{q:"Latitude dividing Earth?",o:["Equator","Tropic","Meridian","Arctic"],a:0},
+{q:"Magnification +2 means image is?",o:["Real inverted","Virtual erect","Real erect","Virtual inverted"],a:1},
+{q:"Chemical formula of washing soda?",o:["Na₂CO₃","NaHCO₃","Na₂CO₃·10H₂O","CaCO₃"],a:2},
+{q:"Founder of INC?",o:["A.O. Hume","Gandhi","Tilak","Nehru"],a:0},
+{q:"Angle of incidence equals?",o:["Angle of refraction","Angle of reflection","90°","0°"],a:1},
+{q:"SI unit of force?",o:["Dyne","Newton","Joule","Pascal"],a:1},
+{q:"If a:b=3:5 find a/(a+b)",o:["3/8","5/8","8/3","1/8"],a:0}
+],
+
+/* ================= LEVEL 5 (MODERATE–HARD) ================= */
+[
+{q:"Image formed by concave mirror for object beyond C?",o:["Real inverted","Virtual erect","Real erect","No image"],a:0},
+{q:"Find roots of x² − 5x + 6 = 0",o:["2,3","−2,−3","1,6","−1,−6"],a:0},
+{q:"Reactivity series metal used for extraction by electrolysis?",o:["Iron","Copper","Aluminium","Zinc"],a:2},
+{q:"Acceleration due to gravity value?",o:["9.8 m/s²","10 m/s","8.9 m/s²","9.8 m/s"],a:0},
+{q:"Main cause of French Revolution?",o:["Economic crisis","Climate","Religion","War"],a:0},
+{q:"Electric power formula?",o:["V×I","I/R","R×I","V/R"],a:0},
+{q:"Respiration is?",o:["Endothermic","Exothermic","Neutral","Physical"],a:1},
+{q:"Value of tan 45°?",o:["0","1","√3","½"],a:1},
+{q:"Which sector dominates Indian economy?",o:["Primary","Secondary","Tertiary","None"],a:2},
+{q:"Chemical reaction with heat release?",o:["Endothermic","Exothermic","Reversible","Neutral"],a:1}
+],
+
+/* ================= LEVEL 6 (HARD) ================= */
+[
+{q:"Equivalent resistance of 2Ω and 3Ω in series?",o:["5Ω","6Ω","1Ω","2.5Ω"],a:0},
+{q:"Magnification of mirror is −1. Image is?",o:["Virtual","Real same size","Enlarged","Diminished"],a:1},
+{q:"Discriminant of x² − 4x + 4?",o:["0","4","−4","16"],a:0},
+{q:"Which hormone controls blood sugar?",o:["Insulin","Adrenaline","Thyroxine","GH"],a:0},
+{q:"Law stating equal action-reaction?",o:["1st","2nd","3rd","Gravitation"],a:2},
+{q:"Which resource is non-renewable?",o:["Wind","Solar","Coal","Water"],a:2},
+{q:"Current = ?",o:["Q/t","V/R","P/V","IR"],a:0},
+{q:"Largest producer of iron ore in India?",o:["Odisha","Jharkhand","Goa","Karnataka"],a:0},
+{q:"Formula of bleaching powder?",o:["CaOCl₂","CaCl₂","CaCO₃","NaOCl"],a:0},
+{q:"If sin A = 1/2, A = ?",o:["30°","45°","60°","90°"],a:0}
+],
+
+/* ================= LEVEL 7 (HARD) ================= */
+[
+{q:"Work done when displacement is zero?",o:["0","Max","Min","Infinite"],a:0},
+{q:"Graph of V–I for ohmic conductor is?",o:["Straight line","Curve","Circle","Parabola"],a:0},
+{q:"Which salt gives basic solution?",o:["NaCl","NH₄Cl","Na₂CO₃","HCl"],a:2},
+{q:"Find distance using v²=u²+2as (u=0)",o:["√2as","2as","as","a/s"],a:0},
+{q:"Which revolution started in France 1789?",o:["Russian","French","American","Industrial"],a:1},
+{q:"Which mirror always gives virtual image?",o:["Concave","Convex","Plane","All"],a:1},
+{q:"Energy stored in object due to position?",o:["KE","PE","Heat","Sound"],a:1},
+{q:"Tertiary sector example?",o:["Farming","Manufacturing","Banking","Mining"],a:2},
+{q:"Which gas causes acid rain?",o:["SO₂","O₂","N₂","H₂"],a:0},
+{q:"Value of cos 60°?",o:["1","0","0.5","√3/2"],a:2}
+],
+
+/* ================= LEVEL 8 (VERY HARD) ================= */
+[
+{q:"Rate of change of velocity is?",o:["Speed","Acceleration","Momentum","Force"],a:1},
+{q:"Equivalent resistance of 2Ω & 2Ω parallel?",o:["1Ω","2Ω","4Ω","0.5Ω"],a:0},
+{q:"Which metal is least reactive?",o:["Iron","Zinc","Gold","Aluminium"],a:2},
+{q:"Find x if sin x = cos x",o:["30°","45°","60°","90°"],a:1},
+{q:"Economic activity not included in GDP?",o:["Teaching","Farming","Housework","Banking"],a:2},
+{q:"pH of acidic solution?",o:["<7",">7","=7","0"],a:0},
+{q:"Lens used for myopia?",o:["Convex","Concave","Cylindrical","Plane"],a:1},
+{q:"Work done in circular motion?",o:["0","Max","Min","Infinite"],a:0},
+{q:"Which reaction absorbs heat?",o:["Exothermic","Endothermic","Neutral","Redox"],a:1},
+{q:"Value of tan 30°?",o:["1/√3","√3","1","0"],a:0}
+],
+
+/* ================= LEVEL 9 (VERY HARD) ================= */
+[
+{q:"SI unit of electric power?",o:["Joule","Watt","Volt","Ampere"],a:1},
+{q:"Image distance equals object distance for?",o:["Plane mirror","Concave","Convex","Lens"],a:0},
+{q:"Nature of roots if D<0?",o:["Real","Equal","Imaginary","Rational"],a:2},
+{q:"Which metal corrodes fastest?",o:["Iron","Copper","Aluminium","Gold"],a:0},
+{q:"Who wrote 'Nationalism in India'?",o:["Gandhi","Hobsbawm","NCERT","Nehru"],a:2},
+{q:"Value of g on Moon?",o:["9.8","1.6","3.7","24"],a:1},
+{q:"Unit of frequency?",o:["Hertz","Second","Newton","Watt"],a:0},
+{q:"Which sector employs most Indians?",o:["Primary","Secondary","Tertiary","IT"],a:0},
+{q:"Chemical reaction involving oxidation & reduction?",o:["Redox","Neutral","Thermal","Combination"],a:0},
+{q:"sin²A + cos²A = ?",o:["0","1","2","sinA"],a:1}
+],
+
+/* ================= LEVEL 10 (EXTREME / BOARD HOTS) ================= */
+[
+{q:"Slope of velocity-time graph gives?",o:["Speed","Acceleration","Distance","Momentum"],a:1},
+{q:"Equivalent resistance decreases in?",o:["Series","Parallel","Single","None"],a:1},
+{q:"Image formed at focus by concave mirror?",o:["Real at infinity","Virtual","Erect","No image"],a:0},
+{q:"Which salt gives neutral solution?",o:["NaCl","NH₄Cl","Na₂CO₃","HCl"],a:0},
+{q:"Find roots if D=0",o:["Equal","Imaginary","Distinct","None"],a:0},
+{q:"Green Revolution increased?",o:["Food grains","Industry","Exports","Imports"],a:0},
+{q:"Lens power unit?",o:["Dioptre","Watt","Volt","Metre"],a:0},
+{q:"Work done by centripetal force?",o:["0","Max","Min","Infinite"],a:0},
+{q:"Chemical reaction with single displacement?",o:["Combination","Decomposition","Displacement","Redox"],a:2},
+{q:"Value of cos 0°?",o:["0","1","0.5","√3"],a:1}
+],
+];
+
+for(let i=1;i<10;i++){
+  let levelQ=[];
+  for(let j=1;j<=10;j++){
+    levelQ.push({
+      q:`Level ${i+1} Question ${j}`,
+      o:["Option A","Option B","Option C","Option D"],
+      a:Math.floor(Math.random()*4)
+    });
+  }
+  questions.push(levelQ);
+}
+
+function login(){
+  const pass = document.getElementById("password").value;
+  if(pass === PASSWORD){
+    loginDiv(false);
+  }else{
+    document.getElementById("loginError").innerText="Wrong Password!";
+  }
+}
+
+function loginDiv(ok){
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("welcome").classList.remove("hidden");
+}
+
+function showLevels(){
+  document.getElementById("welcome").classList.add("hidden");
+  document.getElementById("levels").classList.remove("hidden");
+  renderLevels();
+}
+
+function renderLevels(){
+  const container=document.getElementById("levelButtons");
+  container.innerHTML="";
+  for(let i=1;i<=10;i++){
+    let btn=document.createElement("button");
+    btn.innerText="Level "+i;
+    btn.className="level-btn";
+    if(i>unlockedLevel){
+      btn.classList.add("locked");
+    }else{
+      btn.onclick=()=>startLevel(i);
+    }
+    container.appendChild(btn);
+  }
+}
+
+function startLevel(level){
+  currentLevel=level-1;
+  currentQuestion=0;
+  score=0;
+  document.getElementById("levels").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+  document.getElementById("levelTitle").innerText="Level "+level;
+  loadQuestion();
+}
+
+function loadQuestion(){
+  let q=questions[currentLevel][currentQuestion];
+  document.getElementById("question").innerText=q.q;
+  const optDiv=document.getElementById("options");
+  optDiv.innerHTML="";
+  q.o.forEach((opt,idx)=>{
+    let div=document.createElement("div");
+    div.className="option";
+    div.innerText=opt;
+    div.onclick=()=>{
+      if(idx===q.a) score++;
+      nextQuestion();
+    };
+    optDiv.appendChild(div);
+  });
+  document.getElementById("progress").innerText=
+    `Question ${currentQuestion+1}/10 | Score: ${score}`;
+}
+
+function nextQuestion(){
+  currentQuestion++;
+  if(currentQuestion<10){
+    loadQuestion();
+  }else{
+    endLevel();
+  }
+}
+
+function endLevel(){
+  let percent=(score/10)*100;
+  if(percent>=70 && unlockedLevel===currentLevel+1){
+    unlockedLevel++;
+    localStorage.setItem("unlockedLevel",unlockedLevel);
+  }
+  alert(`Level Completed!\nScore: ${score}/10`);
+  document.getElementById("quiz").classList.add("hidden");
+  showLevels();
+}
+</script>
+
+</body>
+</html>
